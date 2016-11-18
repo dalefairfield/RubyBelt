@@ -1,0 +1,46 @@
+<h3> Hello <%=session[:alias]%></h3>
+
+<%=flash[:message]%>
+<form action='/bright_ideas/create' method='post'>
+  <input type='hidden' name='authenticity_token' value='<%= form_authenticity_token %>'>
+  <h5>New Bright Idea</h5>
+  <input type='text' name='content'>
+  <input type='submit' value='Create Idea'>
+</form>
+<br>
+<table>
+  <tr>
+    <th> User </th>
+    <th> Bright Ideas </th>
+    <th> Did you like this idea? </th>
+    <th> Number of People that liked This Idea </th>
+  </tr>
+  <%@ideas.each do |x|%>
+    <tr>
+      <!-- should be name  -->
+      <td><a href="/users/<%=x.user_id%>"><%=x.user_id%></a></td>
+
+      <!-- ideas -->
+      <td><a href="/bright_ideas/<%=x.id%>"><%=x.content%></a></td>
+
+      <!-- like button -->
+      <td><form action='/bright_ideas/like/<%=x.id%>' method='post'>
+          <input name="authenticity_token" value="<%= form_authenticity_token %>" type="hidden">
+          <button type="submit" >Like</button>
+        </form></td>
+
+
+
+      <td><a href="/bright_ideas/<%=x.id%>">#<%=%></a>people liked This Idea</td>
+
+      <!-- user delete button -->
+    <% if session[:user_id]== x.user_id%>
+    <td><form action='/bright_ideas/delete/<%=x.id%>' method='post'>
+        <input type="hidden" name="_method" value="delete">
+        <input name="authenticity_token" value="<%= form_authenticity_token %>" type="hidden">
+        <button type="submit" >Delete Idea</button>
+      </form></td>
+    <%end%>
+    </tr>
+  <%end%>
+</table>
